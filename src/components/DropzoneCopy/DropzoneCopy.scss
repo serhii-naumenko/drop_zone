@@ -1,0 +1,22 @@
+.DropzoneCopy {
+  width: 400px;
+  height: 300px;
+  border: 1px dashed black;
+  text-align: center;
+  opacity: 0.5;
+  cursor: pointer;
+  
+  &__content {
+    padding: 10px 20px;
+    height: 300px;
+  }
+  
+  &__text {
+    margin-bottom: 10px;
+  }
+
+  &__item {
+    text-align: left;
+    list-style: none;
+  }
+}
