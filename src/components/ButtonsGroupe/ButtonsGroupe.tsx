@@ -5,11 +5,35 @@ import classNames from 'classnames';
 import './ButtonsGroupe.scss';
 import { useDispatch } from 'react-redux';
 
-import { setIsChosenPerson } from '../../redux/reduser';
+import { setChosenUser, setIsChosenPerson } from '../../redux/reduser';
 // eslint-disable-next-line max-len
 // import certData from '../../external_files/test_certs/cert.cer';
 
 // const ASN1 = require('@lapo/asn1js');
+
+const users = [
+  {
+    id: 1,
+    name: 'Іванов Іван Іванович',
+    status: 'valid',
+    dateStart: '10.08.2022',
+    dateFinish: '09.08.2024',
+  },
+  {
+    id: 2,
+    name: 'Петров Петро Петрович',
+    status: 'invalid',
+    dateStart: '15.06.2020',
+    dateFinish: '14.06.2022',
+  },
+  {
+    id: 3,
+    name: 'Сидоров Сидор Сидорович',
+    status: 'valid',
+    dateStart: '06.07.2021',
+    dateFinish: '05.07.2023',
+  },
+];
 
 export const ButtonsGroupe: React.FC = () => {
   const [addText, setAddText] = useState('Додати');
@@ -30,11 +54,22 @@ export const ButtonsGroupe: React.FC = () => {
       setAddTitle('Go to Додавання сертифіката');
       setIsAdd(false);
       dispatch(setIsChosenPerson(false));
+      dispatch(setChosenUser({
+        id: 0,
+        name: '',
+        status: '',
+        dateStart: '',
+        dateFinish: '',
+      }));
     }
   }, [addText, addTitle, isAdd]);
 
-  const handlerChoisePerson = useCallback(() => {
+  const handlerChoisePerson = useCallback((chosenId) => {
+    const chosenUser = users.find((user) => user.id === chosenId);
 
+    if (chosenUser) {
+      dispatch(setChosenUser(chosenUser));
+    }
   }, []);
 
   const handlerChangeFile = useCallback((exactFile) => {
@@ -55,46 +90,23 @@ export const ButtonsGroupe: React.FC = () => {
 
   return (
     <div className="ButtonsGroupe">
-      <button
-        type="button"
-        title="Go to Перегляд сертифікату Іванов"
-        className={classNames(
-          'ButtonsGroupe__item',
-          {
-            'ButtonsGroupe__item-passive': isAdd,
-          },
-        )}
-        disabled={isAdd}
-      >
-        Іванов Іван Іванович
-      </button>
-      <button
-        type="button"
-        title="Go to Перегляд сертифікату Петров"
-        className={classNames(
-          'ButtonsGroupe__item',
-          {
-            'ButtonsGroupe__item-passive': isAdd,
-          },
-        )}
-        disabled={isAdd}
-        onClick={handlerChoisePerson}
-      >
-        Петров Петро Петрович
-      </button>
-      <button
-        type="button"
-        title="Go to Перегляд сертифікату Сидоров"
-        className={classNames(
-          'ButtonsGroupe__item',
-          {
-            'ButtonsGroupe__item-passive': isAdd,
-          },
-        )}
-        disabled={isAdd}
-      >
-        Сидоров Сидор Сидорович
-      </button>
+      {users.map((user) => (
+        <button
+          type="button"
+          key={user.id}
+          title={`Go to Перегляд сертифікату ${user.name.split(' ')[0]}`}
+          className={classNames(
+            'ButtonsGroupe__item',
+            {
+              'ButtonsGroupe__item-passive': isAdd,
+            },
+          )}
+          disabled={isAdd}
+          onClick={() => handlerChoisePerson(user.id)}
+        >
+          {user.name}
+        </button>
+      ))}
       <button
         type="button"
         title={addTitle}
